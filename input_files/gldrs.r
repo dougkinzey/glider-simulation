@@ -4,7 +4,7 @@
 gldrs <- function(NASC.yrs = c(2001:2009,2011),AMLR.area = 'SA',n.rep = 9,n.gldr = c(1,2,3,4,5),
                   save.tables = 1,max.NASC.m = 250,depths = c(150,200,300,400,500,700,1000),azfp.off = 
                   c(150,150,150,150,150,150,150),
-                  qntl.vals = c(0.97,0.98,0.99,0.999,1),smpl.st = 0 
+                  qntl.vals = c(0.97,0.98,0.99,0.999,1),smpl.st = 0 #,seed = 2
                   ){
 max.z.m <- max.NASC.m #??
 if(save.tables == 1)
@@ -67,7 +67,7 @@ for(i.depth in 1:length(depths)){
     # use 'gldry()' outputs (out$z.bin, out$d.bin, out$dive.id)
     # to calculate the glider locations (smpl.pth) in the NASC grid
     #source(paste(getwd(),'/glider_yos.r',sep=''))
-    source('gldry.r')
+    source('input_files/gldry.r')
     out.list <- gldry(std.yo.depth.m,shutoff.azfp.m,max.z.m,yo.locs)
     n.yos <- out.list[[1]]
     out <- out.list[[2]]
@@ -115,8 +115,7 @@ for(i.depth in 1:length(depths)){
       yo.sums <- array(dim=c(yo.count[iyr],n.rep)) # summed depth means for each yo
 
       for(i.rep in 1:n.rep){
-        #set.seed()
-        if(smpl.st > 0) { # begin smpl.st > 0 (assign glider starting locations from file)
+        if(smpl.st > 0) { # assign glider starting locations from file
             gldr.strt.row.no <-  
                read.table(paste('gldr_strt/',i.gldr,'_', AMLR.area,'_',NASC.yrs[iyr],
                '_',depths[i.depth],'_gldr_strt_nos.txt',sep=''),header = TRUE)
@@ -139,7 +138,9 @@ for(i.depth in 1:length(depths)){
                 (as.numeric(gldr.strt.row.no[i.gldr,i.rep])+ncol(smpl.pths)-1)]
               }
             #} # end of inside i.gldr loop
-           }else {  # end smpl.st > 0,begin smpl.st == 0 (random glider starting positions)
+           }else {  # smpl.st == 0 (random glider starting positions)
+             #seed <- seed+1
+             #set.seed(seed)
              gldr.strt.row.no <- sample(1:(ncol(NASC.dat)/2),i.gldr,replace=TRUE)
              gldr.strt.row.name <- colnames(NASC.dat)[unlist(gldr.strt.row.no)]
              dim(gldr.strt.row.name) <- dim(gldr.strt.row.no)

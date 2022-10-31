@@ -1,11 +1,12 @@
 
 library(fishmethods)
 
-Fig9 <- function(
+Fig10 <- function(
   AMLR.area = c('SA'),
   n.rep=9,
   NASC.yrs = c(2001:2009,2011),
   n.gldr = c(1,4,5)) {
+
 
   for(i.area in 1:length(AMLR.area)){
     shiptable <- as.matrix(read.table(
@@ -40,9 +41,10 @@ Fig9 <- function(
 
   log.m <-log(apply(delta.dist[[1]][,'mean',],1,mean,na.rm=TRUE))
   log.sd <-log(apply(delta.dist[[1]][,'mean',],1,sd,na.rm=TRUE))
-
-  #plt.name <- paste('delta_dist_1gldr_',n.rep,'_reps.pdf',sep='')
-  #pdf(file = plt.name) #,width=24,height=18)
+  if (AMLR.area == 'SA') AMLR.stratum <- 'BS'
+  if (AMLR.area == 'WA') AMLR.stratum <- 'CS'
+  #plt.name <- paste('Fig10_delta_dist_',AMLR.stratum,'.jpeg',sep='')
+  #jpeg(file = plt.name) #,width=24,height=18)
   par(mfrow=c(1,1),cex=1.5,cex.lab=1.5,oma=c(2,2,2,0))
   y.lim <- c(min(log(ship.s),log.m/
                (log.sd/log.m)),
@@ -50,8 +52,8 @@ Fig9 <- function(
                (log.sd/log.m))
           )
   plot(NASC.yrs,log(ship.s),cex=1.5,pch=19,lwd=3,ylim=y.lim,
-    main = paste('Delta.dist 1 glider_',AMLR.area[i.area],'_',n.rep,' reps',sep=''),
-           ylab='',xlab='Year')
+    #main = paste('Delta.dist 1 glider_',AMLR.area[i.area],'_',n.rep,' reps',sep=''),
+  main = '', ylab='',xlab='Year')
   title(,ylab=expression(paste('Mean log(',s[A],')')),mgp=c(2.5,1,0))
   lines(NASC.yrs,log(apply(delta.dist[[1]][,'mean',],1,mean,na.rm=TRUE)),lwd=3)
   segments(
@@ -61,4 +63,5 @@ Fig9 <- function(
         ) 
   #dev.off()
   } # end i.area
-} # end Fig9()
+  #graphics.off()
+} # end Fig10()

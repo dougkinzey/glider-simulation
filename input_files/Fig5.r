@@ -5,21 +5,23 @@ Fig5 <- function(NASC.yrs = c(2001:2009,2011),
   qntl.vals = c(0.97,0.98,0.99,0.999,1,'sum','sd'),
   depths = c(150,1000),azfp.off = c(150,150)
   ) {
+
   gldr.smpls.m <- gldr.smpls.sd <- vector()
-  for(igldr in 1:length(n.gldr))
-    for(idpth in 1:length(depths)){
+  for(igldr in length(n.gldr))
+    for(idpth in c(1:length(depths))){
+    #yo.coount, ship.sums already in RData 10/4/22 -dhk
     yo.count <- read.table(paste('tables/yo_count/',n.gldr[igldr],'_', AMLR.area,
                 '_',depths[idpth],'_yo_count.txt',sep=''))
     ship.sums <- as.matrix(read.table(paste('tables/shiptable',AMLR.area,'.txt',sep=''),header=TRUE)[,2:8])
-    gldr.smpls.yrs <- array(dim=c(n.rep,length(qntl.vals),length(NASC.yrs)))
-    dimnames(gldr.smpls.yrs) <- list(1:n.rep,c(qntl.vals),NASC.yrs)
-    mae.table <- rmse.table <-array(dim=c(length(NASC.yrs),length(qntl.vals)))
-    dimnames(mae.table) <- dimnames(rmse.table) <- list(NASC.yrs,c(qntl.vals))
+    gldr.smpls.yrs <- array(dim=c(n.rep,length(qntl.vals)+2,length(NASC.yrs)))
+    dimnames(gldr.smpls.yrs) <- list(1:n.rep,c(qntl.vals,'sum','sd'),NASC.yrs)
+    mae.table <- rmse.table <-array(dim=c(length(NASC.yrs),length(qntl.vals)+2))
+    dimnames(mae.table) <- dimnames(rmse.table) <- list(NASC.yrs,c(qntl.vals,'sum','sd'))
     for(iyr in 1:length(NASC.yrs)){
       gldr.smpls <- read.table(paste('tables/gldrtables/',n.gldr[igldr],'_', AMLR.area,'_',NASC.yrs[iyr],
                   '_',depths[idpth],'m_gldrtable.txt',sep=''),header=TRUE)
       gldr.smpls.yrs[,,iyr] <- as.matrix(gldr.smpls)
-      mae.tmp <-  rmse.tmp <- array(dim=c(n.rep,length(qntl.vals)))
+      mae.tmp <-  rmse.tmp <- array(dim=c(n.rep,length(qntl.vals)+2))
 
       for(i in 1:n.rep){
         if(n.rep > 1){
@@ -43,8 +45,8 @@ Fig5 <- function(NASC.yrs = c(2001:2009,2011),
     dimnames(yo.count) <- list('yo.count',NASC.yrs)
     write.table(round(mae.table,1),paste(n.gldr[igldr],'_annual_mae.txt',sep=''))
     write.table(round(rmse.table,1),paste(n.gldr[igldr],'_annual_rmse.txt',sep=''))
-    #  plt.name <- 'Glider & Ship Sv_log.pdf'
-    #   pdf(file = plt.name) #,width=24,height=18)
+    #plt.name <- paste('Fig5_',AMLR.area,'_',n.gldr[igldr],'gldrs_',depths[idpth],'dpth.jpeg',sep='')
+    #jpeg(file = plt.name) #,width=24,height=18)
     par(mfrow=c(1,1),cex=1.3,cex.lab=1.3,oma=c(2,2,2,0))
     y.lim <- c(min(c(log(ship.sums[,'sum']),
                    log(gldr.smpls.yrs[,'sum',][gldr.smpls.yrs[,'sum',]>0]),na.rm=TRUE)),
@@ -67,8 +69,8 @@ Fig5 <- function(NASC.yrs = c(2001:2009,2011),
          pch=19,col='blue')
     lines(NASC.yrs,log(ship.sums[,'sum']),col='red',lwd=3)
   } # end igldr, idpth
+  #graphics.off()
 } # end function(Fig5)
-
 
 
 

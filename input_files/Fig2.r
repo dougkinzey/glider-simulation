@@ -3,12 +3,12 @@
 
 library(lattice)
 Fig2 <- function(yo.depths.m=rep(250,3), # max yo depth, no.yos
+max.z.m=255,  #  this value sets the bottom of the plot (255 or 1005)
 angle.deg=22.7,
 azfp.range.m=100,
 shutoff.azfp.m=150,
 bin.length.m=100,
 bin.depth.m=5,
-max.z.m=255,  #  this value sets the bottom of the plot (255 or 1005)
 ship.effective.m=250){
   # convert degrees to radians for use in trig functions
   angle.rad<-angle.deg*pi/180
@@ -88,10 +88,10 @@ ship.effective.m=250){
   Ylab<-'Depth (m)'
   
 out.plot<-levelplot(dive.id~d.bin*100+I(-z.bin)*5,data=out,col.regions=cols,at=cols.at,
- 		      scales=list(x=list(cex=0.9),y=list(cex=0.9)),
+ 		      scales=list(x=list(cex=1.5),y=list(cex=1.5)),
 		      colorkey=FALSE,
-                      xlab=list(Xlab,cex=0.9),
-                      ylab=list(Ylab,cex=0.9))
+                      xlab=list(Xlab,cex=2),
+                      ylab=list(Ylab,cex=2))
  print(out.plot)
 
 } # end function(Fig2)

@@ -1,3 +1,5 @@
+# this function calculates MAE, RMSE, bias, and imprecision scores 
+# and saves them in a 'Fig7' folder along with some simple plots of the fits.
 
 Fig7 <- function(
   NASC.yrs = c(2001:2009,2011),AMLR.area = 'SA',n.rep = 9,
@@ -99,4 +101,3 @@ Fig7 <- function(
 
   } # end of i.depth loop
 } # end Fig7()
-
